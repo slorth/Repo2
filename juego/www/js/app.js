@@ -36,10 +36,33 @@ define(function(require) {
     // Create the canvas
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
-    canvas.width = 512;
-    canvas.height = 480;
+    canvas.width = 500;
+    canvas.height = 300;
     document.body.appendChild(canvas);
+	
+	var posicion = {
+		x:0;
+		y:0;
+		libre:false;
+	}
 
+	var escenario = {
+		posiciones = new Array (1500);
+	}
+	
+	var posicion_aux;
+	for (i=0; i< 50;i++){
+		for (j=0; j<30;j++){
+			var pos=posicion;
+			pos.x=i;
+			pos.y=j;
+			pos.libre=false
+			escenario.posiciones[posicion_aux]=pos;
+			posicion_aux=posicion_aux+1;
+		}
+	}
+	
+	alert(posiciones(2).x);
     // The player's state
     var player = {
         x: 0,
