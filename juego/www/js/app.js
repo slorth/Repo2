@@ -36,23 +36,33 @@ define(function(require) {
     // Create the canvas
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
-    canvas.width = 300;
-    canvas.height = 500;
+    canvas.width = 500;
+    canvas.height = 300;
     document.body.appendChild(canvas);
 	
+	var posicion = {
+		x:0;
+		y:0;
+		libre:false;
+	}
 
-	var Posicion = function (x, y, libre) {
-		this.x = x;
-		this.y = y;
-		this.libre = libre;
-	}
-	
 	var escenario = {
-		posiciones:new Array (1500)
+		posiciones = new Array (1500);
 	}
 	
+	var posicion_aux;
+	for (i=0; i< 50;i++){
+		for (j=0; j<30;j++){
+			var pos=posicion;
+			pos.x=i;
+			pos.y=j;
+			pos.libre=false
+			escenario.posiciones[posicion_aux]=pos;
+			posicion_aux=posicion_aux+1;
+		}
+	}
 	
-	
+	alert(posiciones(2).x);
     // The player's state
     var player = {
         x: 0,
@@ -92,55 +102,24 @@ define(function(require) {
         if(input.isDown('DOWN')) {
             // dt is the number of seconds passed, so multiplying by
             // the speed gives u the number of pixels to move
-			
-			for (i=0; i<escenario.posiciones.length;i++){
-				pos=escenario.posiciones[i];
-				var y_nueva=parseInt(pos.y-2);
-				if (parseInt(player.x/10)==pos.x && parseInt(player.y/10)==y_nueva){
-					if (pos.libre==false){
-						player.y += playerSpeed * dt;
-					}
-				}
-			}	
-			
-            
+            player.y += playerSpeed * dt;
         }
 
         if(input.isDown('UP')) {
-			for (i=0; i<escenario.posiciones.length;i++){
-				pos=escenario.posiciones[i];
-				//var y_nueva=parseInt(pos.y-2);
-				if (parseInt(player.x/10)==pos.x && parseInt(player.y/10)==pos.y){
-					if (pos.libre==false){
-						player.y -= playerSpeed * dt;
-					}
-				}
-			}	
-            
+            player.y -= playerSpeed * dt;
         }
 
         if(input.isDown('LEFT')) {
-            for (i=0; i<escenario.posiciones.length;i++){
-				pos=escenario.posiciones[i];
-				var x_nueva=parseInt(pos.x-2);
-				if (parseInt(player.x/10)==pos.x && parseInt(player.y/10)==pos.y){
-					if (pos.libre==false){
-						player.x -= playerSpeed * dt;
-					}
-				}
-			}	
+            player.x -= playerSpeed * dt;
         }
 
         if(input.isDown('RIGHT')) {
-			for (i=0; i<escenario.posiciones.length;i++){
-				pos=escenario.posiciones[i];
-				var x_nueva=parseInt(pos.x-2);
-				if (parseInt(player.x/10)==x_nueva && parseInt(player.y/10)==pos.y){
-					if (pos.libre==false){
-						player.x += playerSpeed * dt;
-					}
-				}
-			}	
+            if (player.x<40 && player.y>0 && player.y <200 ){
+				
+				player.x += playerSpeed * dt;
+			}
+			
+			
         }
     };
 
@@ -153,14 +132,6 @@ define(function(require) {
         //ctx.fillRect(player.x, player.y, player.sizeX, player.sizeY);
 		//ctx.drawImage('dib1.jpg',player.sizeX, player.sizeY);
 		ctx.drawImage(img, player.x, player.y);
-		
-		for (i=0; i<escenario.posiciones.length;i++){
-			pos=escenario.posiciones[i];
-			if (pos.libre==true){
-				ctx.fillStyle = 'black';
-				//ctx.fillRect(pos.x*10, pos.y*10, 10, 10);
-			}
-		}
     };
 
     // The main game loop
@@ -168,45 +139,7 @@ define(function(require) {
         if(!running) {
             return;
         }
-		
-		var posicion_aux=0;
-		var pos;
-		for (i=0; i< 30;i++){
-		for (j=0; j<50;j++){
-			pos=new Posicion(i,j,new Boolean());
-			escenario.posiciones[posicion_aux]=pos;
-			posicion_aux=posicion_aux+1;
-		}
-	}
-		//Rellenamos los arbustos
-		
-		for (i=0; i<escenario.posiciones.length;i++){
-			pos=escenario.posiciones[i];
-			if (pos.x<10 && pos.y>44){
-				pos.libre=true;
-			}
-			
-			if (pos.x>3 && pos.x < 12 && pos.y <42){
-				pos.libre=true;
-			}
-			
-			if (pos.x>11 && pos.x < 27 && pos.y <10){
-				pos.libre=true;
-			}
-			
-			if (pos.y>17 && pos.x>15 && pos.x<21 ){
-				pos.libre=true;
-			}
-			
-			if (pos.y>12 && pos.x>25 ){
-				pos.libre=true;
-			}
-			
-			escenario.posiciones[i]=pos;
-		}
-		
-		
-		
+
         var now = Date.now();
         var dt = (now - then) / 1000.0;
 
